@@ -22,7 +22,7 @@ async function getWeather(location) {
             console.log('Coordinates:', latitude, longitude);
 
             // Fetch weather data using the coordinates
-            const weatherResponse = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m`);
+            const weatherResponse = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&daily=temperature_2m_max,temperature_2m_min,weathercode`);
             const weatherData = await weatherResponse.json();
             console.log('Weather Data:', weatherData);
 
@@ -36,30 +36,39 @@ async function getWeather(location) {
     }
 }
 
-
-
-
-
 function displayWeather(data) {
     const weatherResults = document.getElementById('weatherResults');
-    if (data.hourly && data.hourly.temperature_2m) {
-        const temperaturesCelsius = data.hourly.temperature_2m;
-        const temperaturesFahrenheit = temperaturesCelsius.map(tempCelsius => {
-            return (tempCelsius * 9/5) + 32; // Convert Celsius to Fahrenheit
-        });
-        
-        let html = '<h3>Hourly Temperatures:</h3><ul id="temps">';
-        temperaturesFahrenheit.forEach((tempFahrenheit, index) => {
-            html += `<li>Hour ${index}: ${tempFahrenheit.toFixed(2)}°F</li>`; // Display temperature with two decimal places
-        });
-        html += '</ul>';
+    if (data.daily && data.daily.temperature_2m_max && data.daily.temperature_2m_min && data.daily.weathercode) {
+        const tempMaxCelsius = data.daily.temperature_2m_max[0];
+        const tempMinCelsius = data.daily.temperature_2m_min[0];
+        const weatherCode = data.daily.weathercode[0];
+
+        const tempMaxFahrenheit = (tempMaxCelsius * 9/5) + 32;
+        const tempMinFahrenheit = (tempMinCelsius * 9/5) + 32;
+
+        const weatherConditions = {
+            0: 'Clear sky',
+            2: 'Partly cloudy',
+            3: 'Overcast',
+            45: 'Fog',
+            51: 'Drizzle',
+            61: 'Rain',
+            66: 'Freezing Rain',
+            71: 'Snow fall',
+            95: 'Thunderstorm',
+            96: 'Thunderstorm with hail',
+        };
+
+        const weatherDescription = weatherConditions[weatherCode] || 'Unknown weather condition';
+        const weatherIconUrl = `images/${weatherCode}.png`;
+
+        let html = `<h3>Today's Weather:</h3>
+                    <img id="image" src="${weatherIconUrl}" alt="${weatherDescription}" />
+                    <p>Max Temperature: ${tempMaxFahrenheit.toFixed(2)}°F</p>
+                    <p>Min Temperature: ${tempMinFahrenheit.toFixed(2)}°F</p>
+                    <p>Conditions: ${weatherDescription}</p>`;
         weatherResults.innerHTML = html;
     } else {
         weatherResults.innerHTML = 'Weather data not available.';
     }
 }
-
-
-
-
-
