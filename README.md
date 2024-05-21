@@ -5,6 +5,8 @@ Open source api project
 How this webapp works:
 
 This is a simple weather webapp. It will tell you the temperture and weather conditions for your city.
-1: Type your city name in the search bar
-2: Click the magnafying glass icon
-3: Observe the weather!
+<ol>
+<li>Type your city name in the search bar</li>
+<li>Click the magnafying glass icon</li>
+<li>Observe the weather!</li>
+</ol>
