@@ -7,6 +7,6 @@ How this webapp works:
 This is a simple weather webapp. It will tell you the temperture and weather conditions for your city.
 <ol>
 <li>Type your city name in the search bar</li>
-<li>Click the magnafying glass icon</li>
+<li>Click the magnifying glass icon</li>
 <li>Observe the weather!</li>
 </ol>
